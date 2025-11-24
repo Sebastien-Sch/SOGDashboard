@@ -1,0 +1,13 @@
+<div id="login-page-container">
+  <div id="form-container">
+    <img [ngSrc]="logoSrc" id="login-logo" width="70" height="13">
+    <p style="margin-top: 0;">SOG DASHBOARD</p>
+    <hr class="separator" />
+    <h1 style="margin-bottom: 0;">CONNEXION</h1>
+    <form (ngSubmit)="logIn(loginForm)" #loginForm="ngForm">
+      <input type="text" id="username-input" placeholder="Nom d'utilisateur" name="usrname" ngModel>
+      <input type="password" id="password-input" placeholder="Mot de passe" name="passwrd" ngModel>
+      <button type="submit" id="submit-button">SE CONNECTER</button>
+    </form>
+  </div>
+</div>

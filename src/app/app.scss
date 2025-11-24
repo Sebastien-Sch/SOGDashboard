@@ -1,0 +1,18 @@
+.main-content-container {
+  display: grid;
+  grid-template-columns: 46.7vw 46.7vw;
+  margin-top: 5.7rem;
+  margin-left: 80px;
+  background-color: transparent;
+  height: 90vh;
+  width: 95vw;
+  gap: 4px;
+  border: none;
+}
+
+.data {
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  margin: 5px;
+}
