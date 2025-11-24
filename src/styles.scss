@@ -1,17 +1,15 @@
 @use '@angular/material' as mat;
 
 html {
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    )
-  ));
+  @include mat.theme((color: (primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      )));
 
   font-family: "Google Sans Flex", sans-serif;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
+
 :root {
   --font-color: #F8F5F0;
   --background-color: #252436;
@@ -21,7 +19,8 @@ html {
   color: var(--font-color);
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
 }
@@ -39,11 +38,18 @@ h1 {
 }
 
 div {
-  background-color: #51505e;
+  // background-color: #51505e;
   border-radius: 15px;
   box-sizing: border-box;
-  border: solid #5c5b6b 1px;
+  // border: solid #5c5b6b 1px;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

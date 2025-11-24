@@ -1,13 +1,64 @@
 .main-content-container {
-  display: grid;
-  grid-template-columns: 46.7vw 46.7vw;
+  display: flex;
   margin-top: 5.7rem;
   margin-left: 80px;
-  background-color: transparent;
-  height: 90vh;
-  width: 95vw;
-  gap: 4px;
+  flex: 1;
   border: none;
+  flex-direction: row;
+}
+
+section {
+  height: 100vh;
+  display: flex;
+}
+
+#global-data,
+#cat-sales {
+  flex: 2;
+}
+
+#data-sales {
+  flex: 1;
+}
+
+#ranking-sales {
+  flex: 4;
+}
+
+#nb-sales,
+#evolution-sales {
+  flex: 1;
+}
+
+#sales,
+#manufac-ranking {
+  flex: 4;
+}
+
+#data-store,
+#nb-sales-agreement {
+  flex: 1;
+}
+
+#nb-prod-stores,
+#percent-prod-sales {
+  flex: 4;
+}
+
+#data-manufacturer,
+#nb-manufacturers {
+  flex: 1;
+}
+
+#evolution-products {
+  flex: 4;
+}
+
+.row-1,
+.row-2 {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 
 .data {
@@ -15,4 +66,7 @@
   font-size: 18px;
   text-align: center;
   margin: 5px;
+  background-color: #51505e;
+  border: solid #5c5b6b 1px;
+
 }

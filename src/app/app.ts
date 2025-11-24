@@ -14,7 +14,7 @@ import { LoginService } from './services/loginService/login-service';
 export class App {
   protected readonly title = signal('sog-dashboard');
 
-  constructor(private logService: LoginService, private router: Router) {}
+  constructor(private logService: LoginService, private router: Router) { }
 
   ngOnInit() {
     if (!this.logService.isLoggedIn()) {
