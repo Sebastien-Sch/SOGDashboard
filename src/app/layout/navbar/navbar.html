@@ -1,0 +1,21 @@
+<div class="navbar">
+  <div class="logo-container" (click)="goTo('homeSection')">
+    <mat-icon [class.active]="activeSection === 'homeSection'">home</mat-icon>
+  </div>
+
+  <hr>
+  <div class="logo-container" (click)="goTo('salesSection')">
+    <mat-icon [class.active]="activeSection === 'salesSection'">attach_money</mat-icon>
+  </div>
+
+  <hr>
+  <div class="logo-container" (click)="goTo('storeSection')">
+    <mat-icon [class.active]="activeSection === 'storeSection'">store</mat-icon>
+  </div>
+
+  <hr>
+  <div class="logo-container" (click)="goTo('manufacturerSection')">
+    <mat-icon [class.active]="activeSection === 'manufacturerSection'">build</mat-icon>
+  </div>
+
+</div>

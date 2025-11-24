@@ -1,0 +1,11 @@
+@if (!service.isLoggedIn()) {
+  <div id="login-button-container" style="justify-content: center;" (click)="service.goToLoginPage()">
+    <p>LOGIN</p>
+  </div>
+} @else {
+  <div id="login-button-container" (click)="service.logOut()">
+    <div id="userLogo"><p id="usrFirstLetter">{{  getUsrname()[0] }}</p></div>
+    <p style="margin-right: 8px;">{{ getUsrname() }}</p>
+    <mat-icon>logout</mat-icon>
+  </div>
+}
