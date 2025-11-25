@@ -28,11 +28,8 @@ export interface ChartResponse {
     data: any[];
     labels: string[];
   };
-  topVentesProduits: {
-    data: any[];
-    labels: string[];
-  };
-
+  topVentesProduits: Array<{ nbVentes: number; prodId: number; catId: number }>;
+  rankingData: Array<{ nbVentes: number; prodId: number; catId: number }>;
 
 
 }
