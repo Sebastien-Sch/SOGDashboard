@@ -40,8 +40,7 @@ def get_dashboard_data(fabID, month, year):
             "produitsParMagasin": dict_to_chartjs(nb_produit_par_magasin(FILE_VENTE, fabID, month, year)),
             "pourcentageVendus": round(pourcentage_produit_accord_vente(FILE_VENTE, FILE_PRODUIT, fabID, month, year), 2),
             "nbFabParCategorie": dict_to_chartjs(nb_fab_pour_une_cat(FILE_PRODUIT, month, year)),
-
-
+            "nbAccordVente": nb_accord_vente(FILE_VENTE, fabID, month, year),
             "topVentesProduits": top_vente_par_produit(FILE_VENTE, fabID, month, year),
             "evolutionProduitsFab": dict_to_chartjs(dict(evolution_nb_produit_du_fabriquant(FILE_PRODUIT, fabID, month, year))),
             "evolutionVentesSemaine": dict_to_chartjs(dict(evolution_nb_vente_semaine_sur_mois(FILE_VENTE, fabID, month, year)))
