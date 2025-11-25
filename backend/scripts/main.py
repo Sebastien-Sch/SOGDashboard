@@ -4,7 +4,7 @@ from traitement import (top_categorie_par_vente, top_fabriquant_par_vente, nb_pr
                         pourcentage_produit_accord_vente, nb_accord_vente, nb_fab_pour_une_cat, 
                         evolution_nb_produit_du_fabriquant, evolution_nb_vente_semaine_sur_mois, 
                         creer_tableau_catid_produit, creer_tableau_fabid_produit, 
-                        creer_tableau_prodid_produit, clear_dataframe_cache)
+                        creer_tableau_prodid_produit, clear_dataframe_cache, dict_to_chartjs, evolution_to_chartjs)
 
 import os
 import time
@@ -21,30 +21,27 @@ def main(fabID, month, year):
     tick = time.time()
     
     print("\n--- Données globales ---")
-    print(f"Top catégories fab {fabID}: {top_categorie_par_vente(file2, fabID, month, year)}")
-    print(f"Top fabricants: {top_fabriquant_par_vente(file2, month, year)}")
+    print(f"Top catégories fab {fabID}: {dict_to_chartjs(top_categorie_par_vente(file2, fabID, month, year))}")
+    print(f"Top fabricants: {dict_to_chartjs(top_fabriquant_par_vente(file2, month, year))}")
     print(f"Nb produits fab {fabID}: {nb_produit_fabrique(file2, fabID, month, year)}")
 
     print("\n--- Données de ventes ---")
     print(f"Top ventes produit fab {fabID}: {top_vente_par_produit(file1, fabID, month, year)}")
-    categories = creer_tableau_catid_produit(file2)
-    for catID in categories:
-        evolution = evolution_vente_categorie_par_mois(file1, catID, fabID, month, year)
-        print(f"Évolution ventes cat {catID}/fab {fabID}: {evolution}")
+    evolution = evolution_to_chartjs(evolution_vente_categorie_par_mois(file1, fabID, month, year))
+    print(f"Évolution ventes fab {fabID}: {evolution}")
     print(f"Nb ventes fab {fabID}: {nb_vente_fabriquant_sur_mois(file1, fabID, month, year)}")
 
     print("\n--- Données magasins ---")
-    print(f"Nb produits fab {fabID} au magasin 51: {nb_produit_par_magasin(file1, fabID, 51, month, year)}")
+    print(f"Nb produits fab {fabID} par magasin :  {dict_to_chartjs(nb_produit_par_magasin(file1, fabID, month, year))}")
     print(f"% produits vendus fab {fabID}: {pourcentage_produit_accord_vente(file1, file2, fabID, month, year):.2f}%")
     print(f"Nb accord vente fab {fabID}: {nb_accord_vente(file1, fabID, month, year)}")
 
     print("\n--- Données fabricants ---")
-    print(f"Nb fabs pour cat 4: {nb_fab_pour_une_cat(file2, 4, month, year)}")
-    evolution_mois = evolution_nb_produit_du_fabriquant(file2, fabID, month, year)
-    print(f"Évolution produits fab {fabID}: {dict(evolution_mois)}")
-    evolution_semaines = evolution_nb_vente_semaine_sur_mois(file1, fabID, month, year)
-    evolution_semaines_clean = {int(k): v for k, v in evolution_semaines.items()}
-    print(f"Évolution ventes/semaine fab {fabID}: {evolution_semaines_clean}")
+    print(f"Nb fabs pour cat 4: {dict_to_chartjs(nb_fab_pour_une_cat(file2, month, year))}")
+    evolution_mois = dict_to_chartjs(evolution_nb_produit_du_fabriquant(file2, fabID, month, year))
+    print(f"Évolution produits fab {fabID}: {evolution_mois}")
+    #evolution_semaines = dict_to_chartjs(evolution_nb_vente_semaine_sur_mois(file1, fabID, month, year))
+    #print(f"Évolution ventes/semaine fab {fabID}: {evolution_semaines}")
 
     tack = time.time()
     print("\n" + "=" * 60)

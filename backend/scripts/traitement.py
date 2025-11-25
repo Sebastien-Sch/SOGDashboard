@@ -33,6 +33,56 @@ fabID_key_produit = 3
 ####################### 
 
 
+############################# CONVERSION POUR CHARTJS #######################
+
+def dict_to_chartjs(data_dict):
+    """
+    Convertit un dictionnaire {catID: valeur} en format Chart.js
+    Exemple:
+        Input: {4: 45.5, 2: 30.2, 1: 24.3}
+        Output: {"labels": [4, 2, 1], "data": [45.5, 30.2, 24.3]}
+    """
+    if not data_dict:
+        return {"labels": [], "data": []}
+    
+    labels = list(data_dict.keys())
+    data = list(data_dict.values())
+    
+    return {
+        "labels": labels,
+        "data": data
+    }
+
+def evolution_to_chartjs(evolution_dict):
+    """
+    Convertit l'évolution multi-catégories en format Chart.js pour graphique d'évolution
+    Input: {3: {17: 8}, 1: {18: 83, 22: 70}, 6: {20: 72}}
+    Output: {"labels": [17, 18, 20, 22], "datasets": [{"label": "Cat 1", "data": [0, 83, 0, 70]}, ...]}
+    """
+    if not evolution_dict:
+        return {"labels": [], "datasets": []}
+    
+    # Collecter toutes les semaines et trier
+    all_weeks = set()
+    for week_data in evolution_dict.values():
+        all_weeks.update(week_data.keys())
+    labels = sorted(list(all_weeks))
+    
+    # Créer un dataset par catégorie
+    datasets = []
+    for catID in sorted(evolution_dict.keys()):
+        dataset = {
+            "label": f"Catégorie {catID}",
+            "data": [evolution_dict[catID].get(week, 0) for week in labels]
+        }
+        datasets.append(dataset)
+    
+    return {
+        "labels": labels,
+        "datasets": datasets
+    }
+
+
 ############################# DONNEES GLOBALES ###############################
 
 def top_categorie_par_vente(File, fabID, month, year): ### a mettre pour fabricant
@@ -97,23 +147,36 @@ def top_vente_par_produit(File, fabID, month, year): ### a mettre pour fabricant
         print(error)
         return []
 
-def evolution_vente_categorie_par_mois(File, catID, fabID, month, year):
+def evolution_vente_categorie_par_mois(File, fabID, month, year):
     """
-    Cette fonction analyse l'évolution des ventes pour une catégorie donnée (catID) pour un fabriquant
+    Cette fonction analyse l'évolution des ventes pour TOUTES les catégories d'un fabriquant
     sur une periode mensuelle d'une année donnée (year).
+    
+    Returns:
+        dict: {catID: {semaine: nb_ventes}}
     """
     try:
         df = _read_file_pandas(File, 'vente')
         filtered = df[(df['date'].dt.month == month) & 
                      (df['date'].dt.year == year) & 
-                     (df['catID'] == catID) & 
                      (df['fabID'] == fabID)]
         
-        vente_counts = filtered.groupby(filtered['date'].dt.day).size().to_dict()                           # On groupe par jour et on compte les occurrences (ventes)
-        return collections.defaultdict(int, vente_counts)                                                   # On retourne un defaultdict pour gérer les jours sans ventes
+        # Récupérer toutes les catégories uniques pour ce fabricant
+        categories = filtered['catID'].unique()
+        
+        result = {}
+        for catID in categories:
+            cat_filtered = filtered[filtered['catID'] == catID].copy()
+            cat_filtered['week'] = cat_filtered['date'].dt.isocalendar().week
+            vente_counts = cat_filtered.groupby('week').size().to_dict()
+            # Convertir les clés numpy en int Python pour la compatibilité JSON
+            vente_counts = {int(k): int(v) for k, v in vente_counts.items()}
+            result[int(catID)] = vente_counts
+        
+        return result
     except Exception as error:
         print(error)
-        return collections.defaultdict(int)
+        return {}
 
 def nb_vente_fabriquant_sur_mois(File, fabID, month, year):
     """
@@ -132,17 +195,32 @@ def nb_vente_fabriquant_sur_mois(File, fabID, month, year):
 
 ############################# DONNEES MAGASINS ###############################
 
-def nb_produit_par_magasin(File, fabID, storeID, month, year): ### a mettre pour fabricant
+def nb_produit_par_magasin(File, fabID, month, year):
+    """
+    Cette fonction compte le nombre de produits par magasin pour un fabriquant donné
+    sur une période donnée (mois/année).
+    
+    Returns:
+        dict: {storeID: nb_produits}
+    """
     try:
         df = _read_file_pandas(File, 'vente')
         filtered = df[(df['date'].dt.month == month) & 
                      (df['date'].dt.year == year) & 
-                     (df['fabID'] == fabID) & 
-                     (df['magID'] == storeID)]                                                           # On verifie la date ainsi que le magID                    
-        return len(filtered)                                                                             # On retourne le nombre de lignes correspondantes == nombre de produits dans le magasin
+                     (df['fabID'] == fabID)]
+        
+        # Récupérer tous les magasins uniques pour ce fabricant
+        stores = filtered['magID'].unique()
+        
+        result = {}
+        for storeID in stores:
+            store_filtered = filtered[filtered['magID'] == storeID]
+            result[int(storeID)] = len(store_filtered)
+        
+        return result
     except Exception as error:
         print(error)
-        return 0
+        return {}
 
 def pourcentage_produit_accord_vente(File_vente, file_produit, fabID, month, year):
     """
@@ -183,20 +261,31 @@ def nb_accord_vente(File, fabID, month, year):
 
 ############################# DONNEES FABRIQUANT #############################
 
-def nb_fab_pour_une_cat(File, catID, month, year):
+def nb_fab_pour_une_cat(File, month, year):
     """"
-    Cette fonction lit un fichier d'entrée et compte le nombre de fabricants
-    uniques pour une catégorie de produit donnée (catID).
+    Cette fonction compte le nombre de fabricants uniques pour chaque catégorie
+    sur une période donnée (mois/année).
+    
+    Returns:
+        dict: {catID: nb_fabricants}
     """
     try:
         df = _read_file_pandas(File, 'produit')
         filtered = df[(df['date'].dt.month == month) & 
-                     (df['date'].dt.year == year) & 
-                     (df['catID'] == catID)]                                                            # On prendre les lignes avec la bonne date et la bonne catégorie
-        return filtered['fabID'].nunique()                                                              # On retourne le nombre de fabriquants uniques grace a la fonction nunique()                                  
+                     (df['date'].dt.year == year)]
+        
+        # Récupérer toutes les catégories uniques
+        categories = filtered['catID'].unique()
+        
+        result = {}
+        for catID in categories:
+            cat_filtered = filtered[filtered['catID'] == catID]
+            result[int(catID)] = cat_filtered['fabID'].nunique()
+        
+        return result
     except Exception as error:
         print(error)
-        return 0
+        return {}
 
 
 def evolution_nb_produit_du_fabriquant(File, fabID, month, year):
@@ -210,10 +299,12 @@ def evolution_nb_produit_du_fabriquant(File, fabID, month, year):
                      (df['fabID'] == fabID)]                                                            # On verifie la date ainsi que le fabID                        
         
         dico_nb_produit_par_mois = filtered.groupby(filtered['date'].dt.day).size().to_dict()           # dico des date et du nombre de produits fabriqués
+        # Convertir les clés numpy en int Python pour la compatibilité JSON
+        dico_nb_produit_par_mois = {int(k): int(v) for k, v in dico_nb_produit_par_mois.items()}
         return collections.defaultdict(int, dico_nb_produit_par_mois)                                   # On retourne un defaultdict pour gérer les jours sans produits                
     except Exception as error:
         print(error)
-        return collections.defaultdict(int)        
+        return dict(collections.defaultdict(int))     
 
 def evolution_nb_vente_semaine_sur_mois(File, fabID, month, year):
     """
@@ -228,6 +319,8 @@ def evolution_nb_vente_semaine_sur_mois(File, fabID, month, year):
         filtered['week'] = filtered['date'].dt.isocalendar().week                                       # Ajouter colonne semaine
         
         dico_nb_vente_par_semaine = filtered.groupby('week').size().to_dict()
+        # Convertir les clés numpy en int Python pour la compatibilité JSON
+        dico_nb_vente_par_semaine = {int(k): int(v) for k, v in dico_nb_vente_par_semaine.items()}
         return collections.defaultdict(int, dico_nb_vente_par_semaine)
     except Exception as error:
         print(error)
