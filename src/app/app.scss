@@ -12,8 +12,21 @@ section {
   display: flex;
 }
 
-#cat-sales {
-  flex: 2;
+#cat-sales,
+#nb-sales,
+#nb-sales-agreement {
+  flex: 1;
+}
+
+#manufac-ranking,
+#ranking-sales,
+#percent-prod-sales {
+  flex: 5;
+}
+
+#manufac-ranking {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 #data-sales,
@@ -25,25 +38,12 @@ section {
   align-content: center;
 }
 
-#ranking-sales,
+#evolution-sales,
 #sales,
-#nb-sales-agreement,
+#nb-prod-stores,
+#nb-products,
 #nb-manufacturers {
   flex: 6;
-}
-
-#nb-sales,
-#evolution-sales {
-  flex: 1;
-}
-
-#manufac-ranking {
-  flex: 4;
-}
-
-#nb-prod-stores,
-#percent-prod-sales {
-  flex: 4;
 }
 
 #evolution-products {

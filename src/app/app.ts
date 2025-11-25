@@ -5,8 +5,11 @@ import { Navbar } from './layout/navbar/navbar';
 import { LoginService } from './services/loginService/login-service';
 import { DataManufacturerChartComponent } from "./chart/data-manufacturer-chart/data-manufacturer-chart";
 import { PercentProdSalesChart } from './chart/percent-prod-sales-chart/percent-prod-sales-chart';
-import { EvolutionNbManufacturersCharts } from './chart/evolution-nb-manufacturers-charts/evolution-nb-manufacturers-charts';
 import { EvolutionSalesChart } from './chart/evolution-sales-chart/evolution-sales-chart';
+import { CatSalesChart } from './chart/cat-sales-chart/cat-sales-chart';
+import { NbProdStoresChart } from "./chart/nb-prod-stores-chart/nb-prod-stores-chart";
+import { RankingFabChart } from "./chart/ranking-fab-chart/ranking-fab-chart";
+import { RankingProdSalesChart } from './chart/ranking-prod-sales-chart/ranking-prod-sales-chart';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +19,11 @@ import { EvolutionSalesChart } from './chart/evolution-sales-chart/evolution-sal
     Navbar,
     DataManufacturerChartComponent,
     PercentProdSalesChart,
-    EvolutionNbManufacturersCharts,
     EvolutionSalesChart,
+    CatSalesChart,
+    NbProdStoresChart,
+    RankingFabChart,
+    RankingProdSalesChart,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
