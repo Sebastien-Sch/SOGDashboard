@@ -50,6 +50,10 @@ section {
   flex: 4;
 }
 
+#manufac-ranking {
+  overflow-y: scroll;
+}
+
 .row-1,
 .row-2 {
   display: flex;
