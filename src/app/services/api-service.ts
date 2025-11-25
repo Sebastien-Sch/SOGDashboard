@@ -7,6 +7,10 @@ export interface ChartResponse {
     data: any[];
     labels: string[];
   };
+  produitsParMagasin: {
+    data: any[];
+    labels: string[];
+  };
   topCategories: {
     data: any[];
     labels: string[];
@@ -21,6 +25,7 @@ export interface ChartResponse {
     labels: string[];
   };
   nbProduitsFabriques: number;
+  nbAccordVente: number;
   pourcentageVentesProduits: number;
   nbProduitsMagasins: number;
   nbVentes: number;

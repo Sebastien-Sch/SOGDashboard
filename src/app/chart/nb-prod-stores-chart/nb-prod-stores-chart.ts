@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
+import { ApiService } from '../../services/api-service';
 
 Chart.register(...registerables);
 
@@ -11,28 +12,38 @@ Chart.register(...registerables);
   styleUrl: './nb-prod-stores-chart.scss',
 })
 export class NbProdStoresChart implements AfterViewInit {
-  @ViewChild('nbProdStoresChart', { static: true }) nbProdStoresChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('nbProdStoresChart', { static: true }) nbProdStoresChart!: ElementRef<HTMLCanvasElement>;
 
-  ngAfterViewInit(): void {
-    const ctx = this.nbProdStoresChartRef.nativeElement.getContext('2d');
-    if (ctx) {
-      const labels = ['Produit 1', 'Produit 2', 'Produit 3', 'Produit 4'];
-      const data = [50, 75, 150, 100];
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            indexAxis: 'y',
-            label: 'Nombre de produits en magasin',
-            data: data,
-            backgroundColor: 'rgba(75, 192, 192, 0.5)',
-          }]
-        },
-        options: {
-          responsive: true,
-        }
-      });
-    }
+  private chartInstance: Chart | null = null;
+  constructor(private api: ApiService) { }
+
+  ngAfterViewInit() {
+    const ctx = this.nbProdStoresChart.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    this.api.getData().subscribe({
+      next: (res) => {
+        console.log('produitsParMagasin API chart response:', res);
+        console.log('produitsParMagasin:', res.produitsParMagasin.data);
+        this.chartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: res.produitsParMagasin.labels,
+            datasets: [{
+              label: 'Données des fabricants',
+              data: res.produitsParMagasin.data,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+              // indexAxis: 'y',
+            }]
+          },
+          options: { scales: { y: { beginAtZero: true } } }
+        });
+      },
+      error: (err) => {
+        console.error('Erreur API chart:', err);
+      }
+    });
   }
 }

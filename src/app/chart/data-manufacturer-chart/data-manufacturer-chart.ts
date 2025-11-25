@@ -21,8 +21,6 @@ export class DataManufacturerChartComponent implements AfterViewInit {
 
     this.api.getData().subscribe({
       next: (res) => {
-        console.log('API chart response:', res);
-        console.log('nbFabParCategorie:', res.nbFabParCategorie.data);
         this.chartInstance = new Chart(ctx, {
           type: 'bar',
           data: {
@@ -32,7 +30,8 @@ export class DataManufacturerChartComponent implements AfterViewInit {
               data: res.nbFabParCategorie.data,
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1
+              borderWidth: 1,
+              indexAxis: 'y',
             }]
           },
           options: { scales: { y: { beginAtZero: true } } }

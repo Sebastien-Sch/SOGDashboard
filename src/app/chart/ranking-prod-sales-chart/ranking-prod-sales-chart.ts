@@ -23,11 +23,10 @@ export class RankingProdSalesChart implements OnInit {
           return;
         }
         this.rankingData = raw.map((item: any) => ({
-          prodId: item?.[0] ?? null,
-          catId: item?.[1] ?? null,
-          nbVentes: item?.[2] ?? 0,
+          prodId: item?.[1] ?? null,
+          catId: item?.[2] ?? null,
+          nbVentes: item?.[0] ?? 0,
         }));
-        console.log('rankingData', this.rankingData);
       },
       error: (err) => {
         console.error('Erreur API chart:', err);

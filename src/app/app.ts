@@ -35,6 +35,7 @@ export class App {
   protected readonly title = signal('sog-dashboard');
   nbProduitsFabriques: number = 0;
   nbVentes: number = 0;
+  nbAccordVente: number = 0;
 
   constructor(private logService: LoginService, private router: Router, private apiService: ApiService) { }
 
@@ -43,6 +44,7 @@ export class App {
       next: (res) => {
         this.nbProduitsFabriques = res.nbProduitsFabriques;
         this.nbVentes = res.nbVentes;
+        this.nbAccordVente = res.nbAccordVente;
       },
       error: (err) => {
         console.error('Erreur API chart:', err);

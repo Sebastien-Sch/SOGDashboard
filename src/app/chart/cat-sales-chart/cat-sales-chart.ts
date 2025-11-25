@@ -35,7 +35,7 @@ export class CatSalesChart implements AfterViewInit {
               backgroundColor: [
                 'rgba(75, 192, 192, 0.5)',
                 'rgba(54, 162, 235, 0.5)',
-                'rgba(86, 230, 255, 0.5)'
+                'rgba(86, 230, 255, 0.5)',
               ],
             }]
           },
