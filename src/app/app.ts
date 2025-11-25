@@ -10,6 +10,8 @@ import { CatSalesChart } from './chart/cat-sales-chart/cat-sales-chart';
 import { NbProdStoresChart } from "./chart/nb-prod-stores-chart/nb-prod-stores-chart";
 import { RankingFabChart } from "./chart/ranking-fab-chart/ranking-fab-chart";
 import { RankingProdSalesChart } from './chart/ranking-prod-sales-chart/ranking-prod-sales-chart';
+import { ApiService } from './services/api-service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +26,7 @@ import { RankingProdSalesChart } from './chart/ranking-prod-sales-chart/ranking-
     NbProdStoresChart,
     RankingFabChart,
     RankingProdSalesChart,
-  ],
+    HttpClientModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -32,9 +34,21 @@ import { RankingProdSalesChart } from './chart/ranking-prod-sales-chart/ranking-
 export class App {
   protected readonly title = signal('sog-dashboard');
 
-  constructor(private logService: LoginService, private router: Router) { }
+  constructor(private logService: LoginService, private router: Router, private apiService: ApiService) { }
 
   ngOnInit() {
+    var dataChart: any;
+    this.apiService.getData().subscribe({
+      next: (data) => {
+        dataChart = data;
+
+      }
+    });
+
+
+    console.log("this.dataChart data :", dataChart.data);
+    console.log("this.dataChart label :", dataChart.labels);
+
     if (!this.logService.isLoggedIn()) {
       this.router.navigate(['/login-page']);
     }
