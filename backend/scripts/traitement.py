@@ -153,12 +153,15 @@ def pourcentage_produit_accord_vente(File_vente, file_produit, fabID, month, yea
         df_vente = _read_file_pandas(File_vente, 'vente')                                                # Lecture du fichier de ventes
         df_produit = _read_file_pandas(file_produit, 'produit')                                          # Lecture du fichier de produits
         
-        nb_produit_vente = len(df_vente[(df_vente['date'].dt.month == month) & 
-                                        (df_vente['date'].dt.year == year) & 
-                                        (df_vente['fabID'] == fabID)])                                  # On compte les produits vendus du fabriquant
+        ventes_filtered = df_vente[(df_vente['date'].dt.month == month) & 
+                                (df_vente['date'].dt.year == year) & 
+                                (df_vente['fabID'] == fabID)]
+        nb_produit_vente = ventes_filtered['prodID'].nunique()
+        print(nb_produit_vente)
         nb_produit_produit = len(df_produit[(df_produit['date'].dt.month == month) & 
                                             (df_produit['date'].dt.year == year) & 
                                             (df_produit['fabID'] == fabID)])                            # On compte le nombre total de produits fabriqués du fabriquant pour ce mois/année
+        print(nb_produit_produit)
         
         if nb_produit_produit == 0:                                                                     # Si il ya 0 produit, comme les div par 0 sont impossible on retourne 0 directement
             return 0.0
@@ -174,11 +177,9 @@ def nb_accord_vente(File, fabID, month, year): # chiffre
     """
     try:
         df = _read_file_pandas(File, 'vente')
-        nb_ventes = len(df[(df['date'].dt.month == month) & 
-                          (df['date'].dt.year == year) & 
-                          (df['fabID'] == fabID)])                                                      # On verifie la date ainsi que le fabID
-        return nb_ventes                                                                                # On retourne le nombre de lignes correspondantes == nombre de ventes du fabriquant
-    except Exception as error:
+        nb_ventes = len(df[(df['fabID'] == fabID)])                                                      # On verifie la date ainsi que le fabID
+        return nb_ventes
+    except Exception as error:                                                                               
         print(error)
         return 0
 

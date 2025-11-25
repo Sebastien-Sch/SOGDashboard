@@ -2,9 +2,7 @@ from traitement import (top_categorie_par_vente, top_fabriquant_par_vente, nb_pr
                         top_vente_par_produit, evolution_vente_categorie_par_mois, 
                         nb_vente_fabriquant_sur_mois, nb_produit_par_magasin, 
                         pourcentage_produit_accord_vente, nb_accord_vente, nb_fab_pour_une_cat, 
-                        evolution_nb_produit_du_fabriquant, evolution_nb_vente_semaine_sur_mois, 
-                        creer_tableau_catid_produit, creer_tableau_fabid_produit, 
-                        creer_tableau_prodid_produit, clear_dataframe_cache, dict_to_chartjs, evolution_to_chartjs)
+                        evolution_nb_produit_du_fabriquant, dict_to_chartjs, evolution_to_chartjs)
 
 import os
 import time
