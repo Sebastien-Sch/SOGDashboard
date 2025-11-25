@@ -33,21 +33,21 @@ import { HttpClientModule } from '@angular/common/http';
 
 export class App {
   protected readonly title = signal('sog-dashboard');
+  nbProduitsFabriques: number = 0;
+  nbVentes: number = 0;
 
   constructor(private logService: LoginService, private router: Router, private apiService: ApiService) { }
 
   ngOnInit() {
-    var dataChart: any;
     this.apiService.getData().subscribe({
-      next: (data) => {
-        dataChart = data;
-
+      next: (res) => {
+        this.nbProduitsFabriques = res.nbProduitsFabriques;
+        this.nbVentes = res.nbVentes;
+      },
+      error: (err) => {
+        console.error('Erreur API chart:', err);
       }
     });
-
-
-    console.log("this.dataChart data :", dataChart.data);
-    console.log("this.dataChart label :", dataChart.labels);
 
     if (!this.logService.isLoggedIn()) {
       this.router.navigate(['/login-page']);

@@ -7,25 +7,10 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Fab1</td>
-            <td>50</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Fab2</td>
-            <td>45</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Fab3</td>
-            <td>29</td>
-        </tr>
-        <tr>
-            <th scope="row">4</th>
-            <td>Fab4</td>
-            <td>25</td>
+        <tr *ngFor="let item of rankingData; let i = index">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ item.fabId }}</td>
+            <td>{{ item.nbVentes }}</td>
         </tr>
     </tbody>
 </table>
