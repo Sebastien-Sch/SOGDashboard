@@ -20,6 +20,19 @@ export interface ChartResponse {
     ];
     labels: string[];
   };
+  nbProduitsFabriques: number;
+  pourcentageVentesProduits: number;
+  nbProduitsMagasins: number;
+  nbVentes: number;
+  topFabricants: {
+    data: any[];
+    labels: string[];
+  };
+  topVentesProduits: {
+    data: any[];
+    labels: string[];
+  };
+
 
 
 }
