@@ -1,9 +1,10 @@
 <header>
   <img id="sog-logo" src="/sog_logo.png">
   <h1>SOG DASHBOARD</h1>
-  <div id="searchbar-container">
-    <img id="searchLogo" src="/search_logo.png" style="height: 25%; width: 4%;">
-    <input id="searchbarTextField" type="text" placeholder="Rechercher...">
+  <div style="display: flex; align-items: center; justify-content: center; flex-direction: row;">
+    <mat-icon (click)="onPreviousMonth()" style="margin: 15px; cursor: pointer;">chevron_left</mat-icon>
+    <h2 (change)="onMonthChange(currentIndex)">{{ selectedMonth }}</h2>
+    <mat-icon (click)="onNextMonth()" style="margin: 15px; cursor: pointer;">chevron_right</mat-icon>
   </div>
   <app-login-button />
 </header>
