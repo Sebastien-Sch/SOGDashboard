@@ -14,10 +14,7 @@ from scripts.traitement import (dict_to_chartjs,
                                 nb_accord_vente,
                                 nb_fab_pour_une_cat,
                                 evolution_nb_produit_du_fabriquant,
-                                evolution_nb_vente_semaine_sur_mois,
-                                creer_tableau_catid_produit,
-                                creer_tableau_fabid_produit,
-                                creer_tableau_prodid_produit)
+                                evolution_nb_vente_semaine_sur_mois)
 
 app = Flask(__name__)
 CORS(app)
