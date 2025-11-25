@@ -54,6 +54,7 @@ def get_dashboard_data(fabID, month, year):
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    print("🚀 API démarrée sur http://localhost:5000")
-    print("📊 Testez: http://localhost:5000/api/dashboard/109/5/2022")
-    app.run(debug=True, port=5000)
+    print("API démarrée sur http://0.0.0.0:5000")
+    print("Accessible depuis votre réseau local")
+    print("Testez: http://172.16.8.111:5000/api/dashboard/109/5/2022")
+    app.run(debug=True, host='172.16.8.111', port=5000)
