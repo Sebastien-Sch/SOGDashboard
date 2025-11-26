@@ -43,7 +43,7 @@ export interface ChartResponse {
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'http://192.168.68.131:5000/api/dashboard/109/5/2022';
+  private baseUrl = 'http://172.16.8.124:5000/api/dashboard/109/5/2022';
 
   constructor(private http: HttpClient) { }
 
