@@ -48,12 +48,12 @@ export interface ChartResponse {
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'http://172.16.8.124:5000/api/dashboard/109/5/2022'; /* URL de l'API Python de traitement de données */
+  private baseUrl = 'http://localhost:5000/api/dashboard/109/5/2022'; /* URL de l'API Python de traitement de données */
 
   constructor(private http: HttpClient) { }
 
   getData(fabId? : number, month? : number, year?: number): Observable<ChartResponse> {
-    const url = 'http://172.16.8.124:5000/api/dashboard/' + `${fabId}/${month}/${year}`;
+    const url = 'http://localhost:5000/api/dashboard/' + `${fabId}/${month}/${year}`;
     return this.http.get<ChartResponse>(url);
   }
 

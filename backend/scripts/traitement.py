@@ -80,17 +80,20 @@ def evolution_vente_categorie_par_mois(File, fabID, month, year): # Graphique
     """
     try:
         print("month", month)
+        print("file", File)
         print("year", year)
         print("fabID", fabID)
-        df = _read_file_pandas(File, 'vente')                                                                   # On lit le fichier                                                          
+        df = _read_file_pandas(File, 'vente')                                                                   # On lit le fichier                                
+        print("df", df )                          
         filtered = df[(df['date'].dt.month == month) & 
-                     (df['date'].dt.year == year) & 
-                     (df['fabID'] == fabID)]                                                                    # On verifie que les lignes correspondes a nos parametres
+                     (df['date'].dt.year == year)]                                                                    # On verifie que les lignes correspondes a nos parametres
         
         categories = filtered['catID'].unique()                                                                 # Récupérer toutes les catégories (une seule occurence dans la liste grace a unique)                  
         
         result = {}                                                                                             # Initialisation du dictionnaire de résultat
-        for catID in categories:                                                                                # Pour chaque catégorie
+        print("ICIIIIIIIIIIIIIIIIIIIIII", filtered)
+        for catID in categories:  
+            print("ICIIIIIIIIIIIIIIIIIIIIII", catID)                                                                              # Pour chaque catégorie
             cat_filtered = filtered[filtered['catID'] == catID].copy()                                          # On fait une copie du filtered DataFrame pour éviter les modifications sur l'original, on prend les lignes de filtered qui avec catID qui correspond au catID de la boucle
             cat_filtered['week'] = cat_filtered['date'].dt.isocalendar().week                                   # on extrait la semaine de la date 
             vente_counts = cat_filtered.groupby('week').size().to_dict()
