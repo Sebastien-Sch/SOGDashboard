@@ -31,7 +31,7 @@ def top_fabriquant_par_vente(File, month, year): # Tableau
         filtered = df[(df['date'].dt.month == month) & (df['date'].dt.year == year)]                    
         
         vente_counts = filtered['fabID'].value_counts().to_dict()                                                   # Pour chaque fabID, on compte les occurence des ventes
-        return vente_counts                                                                                                        
+        return vente_counts                                                                                         # On retourne le dictionnaire                                                                                                     
     except Exception as error:
         print(error)
         return {}
@@ -45,8 +45,8 @@ def nb_produit_fabrique(File, fabID, month, year): # Chiffre
         df = _read_file_pandas(File, 'produit')
         filtered = df[(df['date'].dt.month == month) & 
                      (df['date'].dt.year == year) & 
-                     (df['fabID'] == fabID)]                                                            # On regarde si le fabID correspond
-        return len(filtered)                                                                            # on retourne le nombre de lignes correspondantes == nombre de produits fabriqués
+                     (df['fabID'] == fabID)]                                                                        # On regarde si le fabID, la date et le mois correspondent
+        return len(filtered)                                                                                        # on retourne le nombre de lignes correspondantes == nombre de produits fabriqués
     except Exception as error:
         print(error)
         return 0
@@ -59,13 +59,13 @@ def top_vente_par_produit(File, fabID, month, year): # Tableau
     Cette fonction creer un tableau qui classe le top vente de produit [nb ventes, prodID, catID] pour un mois sur une année donnée
     """
     try:
-        df = _read_file_pandas(File, 'vente')                                                           
-        filtered = df[(df['date'].dt.month == month) & (df['date'].dt.year == year) & (df['fabID'] == fabID)]
+        df = _read_file_pandas(File, 'vente')                                                                   # On read le file, on indique qu'il s'agit du fichier de vente donc le file va utiliser les colonnes correspondantes (voir read_file_pandas)                                                           
+        filtered = df[(df['date'].dt.month == month) & (df['date'].dt.year == year) & (df['fabID'] == fabID)]   # On verifie la date ainsi que le fabID
         
-        grouped = filtered.groupby(['prodID', 'catID']).size().reset_index(name='nb_ventes')            # On groupe par prodID et catID, et on compte les occurrences (ventes)
-        grouped = grouped.sort_values('nb_ventes', ascending=False)                                     # On trie par nb_ventes décroissant               
+        grouped = filtered.groupby(['prodID', 'catID']).size().reset_index(name='nb_ventes')                    # On groupe par prodID et catID, et on compte les occurrences (ventes)
+        grouped = grouped.sort_values('nb_ventes', ascending=False)                                             # On trie par nb_ventes décroissant               
         
-        return grouped[['nb_ventes', 'prodID', 'catID']].values.tolist()                                # On convertit en liste de listes [nb_ventes, prodID, catID]
+        return grouped[['nb_ventes', 'prodID', 'catID']].values.tolist()                                        # On convertit en liste de listes [nb_ventes, prodID, catID]
     except Exception as error:
         print(error)
         return []
@@ -79,20 +79,19 @@ def evolution_vente_categorie_par_mois(File, fabID, month, year): # Graphique
         dict: {catID: {semaine: nb_ventes}}
     """
     try:
-        df = _read_file_pandas(File, 'vente')
+        df = _read_file_pandas(File, 'vente')                                                                   # On lit le fichier                                                          
         filtered = df[(df['date'].dt.month == month) & 
                      (df['date'].dt.year == year) & 
-                     (df['fabID'] == fabID)]
+                     (df['fabID'] == fabID)]                                                                    # On verifie que les lignes correspondes a nos parametres
         
-        categories = filtered['catID'].unique()
+        categories = filtered['catID'].unique()                                                                 # Récupérer toutes les catégories (une seule occurence dans la liste grace a unique)                  
         
-        result = {}
-        for catID in categories:
-            cat_filtered = filtered[filtered['catID'] == catID].copy()
-            cat_filtered['week'] = cat_filtered['date'].dt.isocalendar().week
-            vente_counts = cat_filtered.groupby('week').size().to_dict()
-            # Convertir les clés numpy en int Python pour la compatibilité JSON
-            vente_counts = {int(k): int(v) for k, v in vente_counts.items()}
+        result = {}                                                                                             # Initialisation du dictionnaire de résultat
+        for catID in categories:                                                                                # Pour chaque catégorie
+            cat_filtered = filtered[filtered['catID'] == catID].copy()                                          # On fait une copie du filtered DataFrame pour éviter les modifications sur l'original, on prend les lignes de filtered qui avec catID qui correspond au catID de la boucle
+            cat_filtered['week'] = cat_filtered['date'].dt.isocalendar().week                                   # on extrait la semaine de la date 
+            vente_counts = cat_filtered.groupby('week').size().to_dict()                                        # On groupe par semaine et on compte les occurrences (ventes)                        
+            vente_counts = {int(k): int(v) for k, v in vente_counts.items()}                                    # Convertir pour JSON
             result[int(catID)] = vente_counts
         
         return result
@@ -108,8 +107,8 @@ def nb_vente_fabriquant_sur_mois(File, fabID, month, year): # Chiffre
         df = _read_file_pandas(File, 'vente')
         filtered = df[(df['date'].dt.month == month) & 
                      (df['date'].dt.year == year) & 
-                     (df['fabID'] == fabID)]                                                                # On verifie la date ainsi que le fabID
-        return len(filtered)                                                                                # On retourne le nombre de lignes correspondantes == nombre de ventes du fabriquant
+                     (df['fabID'] == fabID)]                                                                    # On verifie la date ainsi que le fabID
+        return len(filtered)                                                                                    # On retourne le nombre de lignes correspondantes == nombre de ventes du fabriquant
     except Exception as error:
         print(error)
         return 0
@@ -126,18 +125,17 @@ def nb_produit_par_magasin(File, fabID, month, year): # Bar chart
         dict: {storeID: nb_produits}
     """
     try:
-        df = _read_file_pandas(File, 'vente')
+        df = _read_file_pandas(File, 'vente')                                                                   # On lit le fichier
         filtered = df[(df['date'].dt.month == month) & 
                      (df['date'].dt.year == year) & 
-                     (df['fabID'] == fabID)]
+                     (df['fabID'] == fabID)]                                                                    # On verifie la date ainsi que le fabID                                 
         
-        # Récupérer tous les magasins uniques pour ce fabricant
-        stores = filtered['magID'].unique()
+        stores = filtered['magID'].unique()                                                                     # On fait une liste des magasins (une occ)
         
         result = {}
-        for storeID in stores:
-            store_filtered = filtered[filtered['magID'] == storeID]
-            result[int(storeID)] = len(store_filtered)
+        for storeID in stores:                                                                                  # On parcourt la liste de magasins
+            store_filtered = filtered[filtered['magID'] == storeID]                                             # On filtre les lignes correspondant au magasin
+            result[int(storeID)] = len(store_filtered)                                                          # La clé sera le storeID, et la valeur la longueur du store filtered               
         
         return result
     except Exception as error:
@@ -150,8 +148,8 @@ def pourcentage_produit_accord_vente(File_vente, file_produit, fabID, month, yea
     par un fabriquant donné (fabID) pour un mois d'une année donnée (month, year).
     """
     try:
-        df_vente = _read_file_pandas(File_vente, 'vente')                                                # Lecture du fichier de ventes
-        df_produit = _read_file_pandas(file_produit, 'produit')                                          # Lecture du fichier de produits
+        df_vente = _read_file_pandas(File_vente, 'vente')                                                       # Lecture du fichier de ventes
+        df_produit = _read_file_pandas(file_produit, 'produit')                                                 # Lecture du fichier de produits
         
         ventes_filtered = df_vente[(df_vente['date'].dt.month == month) & 
                                 (df_vente['date'].dt.year == year) & 
@@ -160,12 +158,12 @@ def pourcentage_produit_accord_vente(File_vente, file_produit, fabID, month, yea
         print(nb_produit_vente)
         nb_produit_produit = len(df_produit[(df_produit['date'].dt.month == month) & 
                                             (df_produit['date'].dt.year == year) & 
-                                            (df_produit['fabID'] == fabID)])                            # On compte le nombre total de produits fabriqués du fabriquant pour ce mois/année
+                                            (df_produit['fabID'] == fabID)])                                    # On compte le nombre total de produits fabriqués du fabriquant pour ce mois/année
         print(nb_produit_produit)
         
-        if nb_produit_produit == 0:                                                                     # Si il ya 0 produit, comme les div par 0 sont impossible on retourne 0 directement
+        if nb_produit_produit == 0:                                                                             # Si il ya 0 produit, comme les div par 0 sont impossible on retourne 0 directement
             return 0.0
-        return (nb_produit_vente / nb_produit_produit) * 100                                            # on fait le pourcentage (produits vendu / produit total) * 100
+        return (nb_produit_vente / nb_produit_produit) * 100                                                    # on fait le pourcentage (produits vendu / produit total) * 100
     except Exception as error:
         print(error)
         return 0.0
@@ -177,7 +175,7 @@ def nb_accord_vente(File, fabID, month, year): # chiffre
     """
     try:
         df = _read_file_pandas(File, 'vente')
-        nb_ventes = len(df[(df['fabID'] == fabID)])                                                      # On verifie la date ainsi que le fabID
+        nb_ventes = len(df[(df['fabID'] == fabID)])                                                             # On verifie la date ainsi que le fabID
         return nb_ventes
     except Exception as error:                                                                               
         print(error)
@@ -199,8 +197,8 @@ def nb_fab_pour_une_cat(File, month, year): # bar chart
         filtered = df[(df['date'].dt.month == month) & 
                      (df['date'].dt.year == year)]
         
-        # Récupérer toutes les catégories uniques
-        categories = filtered['catID'].unique()
+        categories = filtered['catID'].unique()                                                                 # Récupérer toutes les catégories uniques
+
         
         result = {}
         for catID in categories:
@@ -221,12 +219,12 @@ def evolution_nb_produit_du_fabriquant(File, fabID, month, year): # graphique
         df = _read_file_pandas(File, 'produit')
         filtered = df[(df['date'].dt.month == month) & 
                      (df['date'].dt.year == year) & 
-                     (df['fabID'] == fabID)]                                                            # On verifie la date ainsi que le fabID                        
+                     (df['fabID'] == fabID)]                                                                    # On verifie la date ainsi que le fabID                        
         
-        dico_nb_produit_par_mois = filtered.groupby(filtered['date'].dt.day).size().to_dict()           # dico des date et du nombre de produits fabriqués
+        dico_nb_produit_par_mois = filtered.groupby(filtered['date'].dt.day).size().to_dict()                   # dico des date et du nombre de produits fabriqués
         # Convertir les clés numpy en int Python pour la compatibilité JSON
         dico_nb_produit_par_mois = {int(k): int(v) for k, v in dico_nb_produit_par_mois.items()}
-        return collections.defaultdict(int, dico_nb_produit_par_mois)                                   # On retourne un defaultdict pour gérer les jours sans produits                
+        return collections.defaultdict(int, dico_nb_produit_par_mois)                                           # On retourne un defaultdict pour gérer les jours sans produits                
     except Exception as error:
         print(error)
         return dict(collections.defaultdict(int))     
@@ -238,10 +236,10 @@ def evolution_nb_vente_semaine_sur_mois(File, fabID, month, year):
         df = _read_file_pandas(File, 'vente')
         filtered = df[(df['date'].dt.month == month) & 
                      (df['date'].dt.year == year) & 
-                     (df['fabID'] == fabID)]                                                            # On verifie la date ainsi que le fabID
+                     (df['fabID'] == fabID)]                                                                    # On verifie la date ainsi que le fabID
         
-        filtered = filtered.copy()                                                                      # Copier le DataFrame pour éviter les modifications sur l'original
-        filtered['week'] = filtered['date'].dt.isocalendar().week                                       # Ajouter colonne semaine
+        filtered = filtered.copy()                                                                              # Copier le DataFrame pour éviter les modifications sur l'original
+        filtered['week'] = filtered['date'].dt.isocalendar().week                                               # Ajouter colonne semaine
         
         dico_nb_vente_par_semaine = filtered.groupby('week').size().to_dict()
         # Convertir les clés numpy en int Python pour la compatibilité JSON
