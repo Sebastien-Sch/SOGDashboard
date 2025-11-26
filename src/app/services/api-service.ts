@@ -26,7 +26,7 @@ export interface ChartResponse {
   };
   nbProduitsFabriques: number;
   nbAccordVente: number;
-  pourcentageVentesProduits: number;
+  pourcentageVendus: number;
   nbProduitsMagasins: number;
   nbVentes: number;
   topFabricants: {
