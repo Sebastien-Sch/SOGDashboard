@@ -23,7 +23,7 @@ export class EvolutionSalesChart implements AfterViewInit {
 
     this.api.getData().subscribe({
       next: (res) => {
-        const labels = res.evolutionProduitsFab.label;
+        const labels = res.evolutionProduitsFab.labels;
         const Data = res.evolutionProduitsFab.data;
 
         console.log('evolutionProduitsFab API chart response:', res);

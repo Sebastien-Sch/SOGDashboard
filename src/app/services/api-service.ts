@@ -26,7 +26,7 @@ export interface ChartResponse {
   };
   evolutionProduitsFab: {
     data: any[],
-    label: string[],
+    labels: string[],
   },
 
   nbProduitsFabriques: number;
