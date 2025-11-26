@@ -24,6 +24,11 @@ export interface ChartResponse {
     ];
     labels: string[];
   };
+  evolutionProduitsFab: {
+    data: any[],
+    label: string[],
+  },
+
   nbProduitsFabriques: number;
   nbAccordVente: number;
   pourcentageVendus: number;

@@ -23,17 +23,12 @@ export class EvolutionSalesChart implements AfterViewInit {
 
     this.api.getData().subscribe({
       next: (res) => {
-        const labels = res.evolutionVentes.labels;
-        const rawDatasets = res.evolutionVentes.datasets;
+        const labels = res.evolutionProduitsFab.label;
+        const Data = res.evolutionProduitsFab.data;
 
-        // Transforme les datasets en une seule ligne
-        const datasets = rawDatasets.map((data: any, id: number) => ({
-          label: data.label,
-          data: data.data,
-          fill: false,
-          borderColor: ['rgba(75, 192, 192, 1)', 'rgba(54, 162, 235, 1)', 'rgba(86, 230, 255, 1)'][id % 3],
-          tension: 0.1
-        }));
+        console.log('evolutionProduitsFab API chart response:', res);
+        console.log('evolutionProduitsFab labels:', labels);
+        console.log('evolutionProduitsFab data:', Data);
 
         if (this.chartInstance) {
           this.chartInstance.destroy();
@@ -41,8 +36,17 @@ export class EvolutionSalesChart implements AfterViewInit {
 
         this.chartInstance = new Chart(ctx, {
           type: 'line',
-          data: { labels, datasets },
-          options: { responsive: true }
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Données des fabricants',
+              data: Data,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+              // indexAxis: 'y',
+            }]
+          },
         });
       },
       error: (err) => {
