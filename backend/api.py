@@ -52,5 +52,5 @@ def get_dashboard_data(fabID, month, year):
 if __name__ == '__main__':
     print("API démarrée sur http://0.0.0.0:5000")
     print("Accessible depuis votre réseau local")
-    print("Testez: http://192.168.68.131:5000/api/dashboard/109/5/2022")
-    app.run(debug=True, host='192.168.68.131', port=5000)
+    print("Testez: http://172.16.8.124:5000/api/dashboard/109/5/2022")
+    app.run(debug=True, host='172.16.8.124', port=5000)
