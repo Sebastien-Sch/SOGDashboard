@@ -16,6 +16,7 @@ export class LoginPage {
 
   constructor(private service: LoginService) {}
 
+  /* Demande au service de vérifier les informations de l'utilisateur */
   logIn(form: any) {
     if (this.service.checkUsrInfo(form.value.usrname, form.value.passwrd)) {
       this.service.goToHomePage();

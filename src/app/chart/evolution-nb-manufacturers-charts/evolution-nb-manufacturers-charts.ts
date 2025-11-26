@@ -2,61 +2,26 @@ import { Component, ViewChild, ElementRef, AfterViewInit, Input, SimpleChanges }
 import { Chart, registerables } from 'chart.js';
 import { ApiService } from '../../services/api-service';
 
+
 Chart.register(...registerables);
 
 @Component({
-  selector: 'app-data-manufacturer-chart',
+  selector: 'app-evolution-nb-manufacturers-charts',
   standalone: true,
-  templateUrl: './data-manufacturer-chart.html'
+  imports: [],
+  templateUrl: './evolution-nb-manufacturers-charts.html',
+  styleUrl: './evolution-nb-manufacturers-charts.scss',
 })
-export class DataManufacturerChartComponent implements AfterViewInit {
+export class EvolutionNbManufacturersCharts implements AfterViewInit {
   @ViewChild('chartCanvas', { static: true }) chartCanvas!: ElementRef<HTMLCanvasElement>;
+
+  @Input() value?: number;
 
   private chartInstance: Chart | null = null;
   constructor(private api: ApiService) { }
-
-  /* Mois courant pour le calcul des données pour le diagramme */
-  @Input() value!: number;
-
+  
   ngAfterViewInit() {
     const ctx = this.chartCanvas.nativeElement.getContext('2d');
-    if (!ctx) return;
-
-    this.api.getData(109,this.value,2022).subscribe({
-      next: (res) => {
-        this.chartInstance = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: res.nbFabParCategorie.labels,
-            datasets: [{
-              label: 'Données des fabricants',
-              data: res.nbFabParCategorie.data,
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-              indexAxis: 'y',
-            }]
-          },
-          options: { scales: { y: { beginAtZero: true } } }
-        });
-      },
-      error: (err) => {
-        console.error('Erreur API chart:', err);
-      }
-    });
-  }
-
-  /* Détecte les changements de valeur de l'attribut 'value' et lance la mise à jour du diagramme */
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['value'] && !changes['value'].isFirstChange()) {
-      this.loadChart();
-    }
-  }
-
-  /* Recharge le diagramme */
-  loadChart() {
-    const ctx = this.chartCanvas.nativeElement.getContext('2d');
-    console.log("hey   --")
     if (!ctx) return;
 
     if (this.chartInstance) {
@@ -65,25 +30,72 @@ export class DataManufacturerChartComponent implements AfterViewInit {
 
     this.api.getData(109,this.value,2022).subscribe({
       next: (res) => {
+        const labels = res.evolutionProduitsFab.labels;
+        const data = res.evolutionProduitsFab.data;
+
         this.chartInstance = new Chart(ctx, {
-          type: 'bar',
+          type: 'line',
           data: {
-            labels: res.nbFabParCategorie.labels,
+            labels: labels,
             datasets: [{
-              label: 'Données des fabricants',
-              data: res.nbFabParCategorie.data,
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              label: 'Évolution du nombre de fabricants',
+              data: data,
+              fill: false,
               borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-              indexAxis: 'y',
+              tension: 0.1
             }]
           },
-          options: { scales: { y: { beginAtZero: true } } }
+          options: {
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
         });
-      },
-      error: (err) => {
-        console.error('Erreur API chart:', err);
       }
     });
   }
+  
+  /* Détecte les changements de valeur de l'attribut 'value' et lance la mise à jour du diagramme */
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['value'] && !changes['value'].isFirstChange()) {
+      this.loadChart();
+    }
+  }
+
+  loadChart() {
+    const ctx = this.chartCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
+
+    this.api.getData(109,this.value,2022).subscribe({
+      next: (res) => {
+        const labels = res.evolutionProduitsFab.labels;
+        const data = res.evolutionProduitsFab.data;
+
+        this.chartInstance = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Évolution du nombre de fabricants',
+              data: data,
+              fill: false,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              tension: 0.1
+            }]
+          },
+          options: {
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      }
+    });
+  }
+
+  
 }

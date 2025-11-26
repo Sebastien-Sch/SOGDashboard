@@ -13,12 +13,14 @@ export class LoginService {
     this.getLoginData();
   }
 
+  /* Récupère les données des utilisateurs dans le fichier data.json */
   getLoginData() {
     this.http.get<any[]>(this.loginDataUrl).subscribe(data => {
       this.usrs = data;
     });
   }
 
+  /* Vérifie les informations de l'utilisateur */
   checkUsrInfo(usrname: string, passwrd: string): boolean {
     for (var usr of this.usrs) {
       if ((usrname == usr.usrname) && (passwrd == usr.passwrd)) {
@@ -40,6 +42,7 @@ export class LoginService {
     this.router.navigate(['/login-page']);
   }
 
+  /* Vérifie si l'utilisateur est connecté */
   isLoggedIn(): boolean {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user).loggedIn : false;

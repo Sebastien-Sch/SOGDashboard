@@ -12,11 +12,13 @@ import { MatIconModule } from '@angular/material/icon';
 export class LoginButton {
   constructor(private router: Router, public service: LoginService) {}
 
+  /* Récupère le nom de l'utilisateur connecté */
   getUsrname() {
     var data = JSON.parse(<string>localStorage.getItem('user'));
     return data.usrname;
   }
 
+  /* Ouvre la page de connexion */
   openLoginPage() {
     this.router.navigate(['/login-page']);
   }

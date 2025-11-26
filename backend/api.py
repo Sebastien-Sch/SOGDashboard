@@ -31,6 +31,7 @@ def health():
 def get_dashboard_data(fabID, month, year):
     """Récupère toutes les données pour le dashboard"""
     try:
+
         data = {
             "topCategories": dict_to_chartjs(top_categorie_par_vente(FILE_PRODUIT, fabID, month, year)),
             "topFabricants": dict_to_chartjs(top_fabriquant_par_vente(FILE_PRODUIT, month, year)),
@@ -45,6 +46,7 @@ def get_dashboard_data(fabID, month, year):
             "evolutionProduitsFab": dict_to_chartjs(dict(evolution_nb_produit_du_fabriquant(FILE_PRODUIT, fabID, month, year))),
             "evolutionVentesSemaine": dict_to_chartjs(dict(evolution_nb_vente_semaine_sur_mois(FILE_VENTE, fabID, month, year)))
         }
+        print("data",data)
         return jsonify(data)
     except Exception as e:
         return jsonify({"error": str(e)}), 500

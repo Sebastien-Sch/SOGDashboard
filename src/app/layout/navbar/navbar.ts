@@ -27,6 +27,7 @@ export class Navbar {
       sections.forEach((sec) => observer.observe(sec));
   }
 
+  /* Scroll jusqu'a la section correspondante */
   goTo(id: string) {
     const e = document.getElementById(id);
     if (e) {

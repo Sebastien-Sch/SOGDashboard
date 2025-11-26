@@ -79,6 +79,9 @@ def evolution_vente_categorie_par_mois(File, fabID, month, year): # Graphique
         dict: {catID: {semaine: nb_ventes}}
     """
     try:
+        print("month", month)
+        print("year", year)
+        print("fabID", fabID)
         df = _read_file_pandas(File, 'vente')                                                                   # On lit le fichier                                                          
         filtered = df[(df['date'].dt.month == month) & 
                      (df['date'].dt.year == year) & 
@@ -90,10 +93,11 @@ def evolution_vente_categorie_par_mois(File, fabID, month, year): # Graphique
         for catID in categories:                                                                                # Pour chaque catégorie
             cat_filtered = filtered[filtered['catID'] == catID].copy()                                          # On fait une copie du filtered DataFrame pour éviter les modifications sur l'original, on prend les lignes de filtered qui avec catID qui correspond au catID de la boucle
             cat_filtered['week'] = cat_filtered['date'].dt.isocalendar().week                                   # on extrait la semaine de la date 
-            vente_counts = cat_filtered.groupby('week').size().to_dict()                                        # On groupe par semaine et on compte les occurrences (ventes)                        
+            vente_counts = cat_filtered.groupby('week').size().to_dict()
+            print("vente",vente_counts)                                       # On groupe par semaine et on compte les occurrences (ventes)                        
             vente_counts = {int(k): int(v) for k, v in vente_counts.items()}                                    # Convertir pour JSON
             result[int(catID)] = vente_counts
-        
+        print("salut",result)
         return result
     except Exception as error:
         print(error)
@@ -155,11 +159,9 @@ def pourcentage_produit_accord_vente(File_vente, file_produit, fabID, month, yea
                                 (df_vente['date'].dt.year == year) & 
                                 (df_vente['fabID'] == fabID)]
         nb_produit_vente = ventes_filtered['prodID'].nunique()
-        print(nb_produit_vente)
         nb_produit_produit = len(df_produit[(df_produit['date'].dt.month == month) & 
                                             (df_produit['date'].dt.year == year) & 
                                             (df_produit['fabID'] == fabID)])                                    # On compte le nombre total de produits fabriqués du fabriquant pour ce mois/année
-        print(nb_produit_produit)
         
         if nb_produit_produit == 0:                                                                             # Si il ya 0 produit, comme les div par 0 sont impossible on retourne 0 directement
             return 0.0
